@@ -17,3 +17,4 @@
 - Google fonts via <link>
 - Substantive policy paragraphs strictly 5-6 lines (60-110 words)
 - 6 Blog Treatises >= 1200 words with tables, FAQs, schemas
+- Main page has >= 10 distinct sections with high-contrast legibility
